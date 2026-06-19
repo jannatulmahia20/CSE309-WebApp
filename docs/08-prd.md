@@ -23,3 +23,10 @@ The purpose of this system is to help users manage their personal finances by tr
 - Frontend: React
 - Backend: FastAPI
 - Database: PostgreSQL / SQLite
+
+## Future Enhancements
+
+- Expense prediction using historical spending data
+- Email notifications when budget limits are exceeded
+- Export financial reports as PDF
+- Multi-currency support
