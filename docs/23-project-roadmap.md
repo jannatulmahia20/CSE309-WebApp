@@ -19,5 +19,4 @@
 - Testing
 - Bug fixing
 - Deploymentgit add .
-git commit -m "Add project roadmap documentation"
-git push -u origin project-roadmap
+
