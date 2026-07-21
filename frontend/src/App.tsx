@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
+import "./App.css";
+
+import TransactionForm from "./components/TransactionForm";
+import TransactionList from "./components/TransactionList";
+
+import { getTransactions } from "./services/api";
+import type { Transaction } from "./types/transaction";
 
 function App() {
-  const [message, setMessage] = useState("Loading...");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const loadTransactions = async () => {
+    const data = await getTransactions();
+    setTransactions(data);
+  };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/test")
-      .then((response) => response.json())
-      .then((data) => {
-        setMessage(data.message);
-      })
-      .catch(() => {
-        setMessage("Failed to connect to backend.");
-      });
+    loadTransactions();
   }, []);
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        marginTop: "80px",
-        fontFamily: "Arial",
-      }}
-    >
+    <div className="App">
       <h1>Smart Personal Finance Tracker</h1>
-      <h2>Frontend + Backend Connection</h2>
-      <p>{message}</p>
+
+      <TransactionForm onTransactionAdded={loadTransactions} />
+
+      <hr />
+
+      <TransactionList transactions={transactions} />
     </div>
   );
 }
