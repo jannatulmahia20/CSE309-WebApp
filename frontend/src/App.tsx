@@ -64,7 +64,7 @@ function App() {
       <header className="app-header">
         <div className="brand">
         <span className="brand-mark">💰 Expense Tracker</span>
-        <span className="brand-sub">Manage your finances easily</span>
+        <span className="brand-sub">Track your income and expenses</span>
         </div>
         <button
           type="button"
