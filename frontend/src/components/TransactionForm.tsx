@@ -20,9 +20,7 @@ function TransactionForm({ onTransactionAdded }: Props) {
     setTransaction({
       ...transaction,
       [e.target.name]:
-        e.target.name === "amount"
-          ? Number(e.target.value)
-          : e.target.value,
+        e.target.name === "amount" ? Number(e.target.value) : e.target.value,
     });
   };
 
@@ -43,48 +41,70 @@ function TransactionForm({ onTransactionAdded }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Add Transaction</h2>
+      <div className="form-grid">
+        <div className="field">
+          <label htmlFor="title">Title</label>
+          <input
+            id="title"
+            type="text"
+            name="title"
+            placeholder="e.g. Salary, Groceries"
+            value={transaction.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <input
-        type="text"
-        name="title"
-        placeholder="Title"
-        value={transaction.title}
-        onChange={handleChange}
-        required
-      />
+        <div className="field">
+          <label htmlFor="category">Category</label>
+          <input
+            id="category"
+            type="text"
+            name="category"
+            placeholder="e.g. Food, Rent"
+            value={transaction.category}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <input
-        type="number"
-        name="amount"
-        placeholder="Amount"
-        value={transaction.amount}
-        onChange={handleChange}
-        required
-      />
+        <div className="field">
+          <label htmlFor="amount">Amount (৳)</label>
+          <input
+            id="amount"
+            type="number"
+            name="amount"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            value={transaction.amount}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <input
-        type="text"
-        name="category"
-        placeholder="Category"
-        value={transaction.category}
-        onChange={handleChange}
-        required
-      />
+        <div className="field">
+          <label htmlFor="type">Type</label>
+          <select
+            id="type"
+            name="type"
+            value={transaction.type}
+            onChange={handleChange}
+          >
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </select>
+        </div>
 
-      <select
-        name="type"
-        value={transaction.type}
-        onChange={handleChange}
-      >
-        <option value="Income">Income</option>
-        <option value="Expense">Expense</option>
-      </select>
-
-      <br />
-      <br />
-
-      <button type="submit">Add Transaction</button>
+        <div className="field">
+          <label className="sr-only" htmlFor="submit-transaction">
+            Add transaction
+          </label>
+          <button id="submit-transaction" type="submit">
+            Add Entry
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

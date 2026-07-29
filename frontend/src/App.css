@@ -1,15 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+/* ============================================
+   Ledger — a statement-inspired fintech theme
+   ============================================ */
+
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-darker: #1e40af;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --text-muted: #555;
-  --border: #ccc;
-  --border-light: #eee;
-  --bg: #f4f6f9;
-  --bg-alt: #f8fafc;
-  --bg-hover: #f1f5f9;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-2: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* ---- Light (default) ---- */
+:root,
+[data-theme="light"] {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-alt: #fafbfc;
+  --ink: #0f172a;
+  --ink-soft: #182338;
+
+  --border: #e2e6eb;
+  --border-strong: #cbd2d9;
+
+  --text: #12182b;
+  --text-muted: #5b6472;
+  --text-on-ink: #eef1f7;
+  --text-on-ink-muted: #9aa6bd;
+
+  --primary: #1d4ed8;
+  --primary-hover: #1a3fbf;
+  --focus: #2f6fed;
+
+  --positive: #0e8f65;
+  --positive-bg: #e3f7ee;
+  --negative: #c4362c;
+  --negative-bg: #fdebea;
+
+  --ledger-rule: rgba(15, 23, 42, 0.05);
+}
+
+/* ---- Dark ---- */
+[data-theme="dark"] {
+  --bg: #0a0e17;
+  --surface: #121826;
+  --surface-alt: #0f141f;
+  --ink: #060911;
+  --ink-soft: #0c111c;
+
+  --border: #232b3b;
+  --border-strong: #303b4f;
+
+  --text: #e7eaf0;
+  --text-muted: #8d97a8;
+  --text-on-ink: #eef1f7;
+  --text-on-ink-muted: #7b8598;
+
+  --primary: #6c93f5;
+  --primary-hover: #86a6f7;
+  --focus: #6c93f5;
+
+  --positive: #34d399;
+  --positive-bg: rgba(52, 211, 153, 0.12);
+  --negative: #f87171;
+  --negative-bg: rgba(248, 113, 113, 0.12);
+
+  --ledger-rule: rgba(255, 255, 255, 0.045);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
 *,
@@ -20,205 +84,379 @@
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-display);
   background: var(--bg);
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .App {
   max-width: 1000px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
 }
 
-h1 {
-  text-align: center;
-  color: white;
-  background: linear-gradient(90deg, var(--primary), var(--primary-darker));
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+/* ================= Header ================= */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
 }
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-mark {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.brand-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ================= Hero / Summary ================= */
+
+.summary {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.hero-card {
+  background: var(--ink);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--ledger-rule) 0,
+    var(--ledger-rule) 1px,
+    transparent 1px,
+    transparent 28px
+  );
+  border-radius: var(--radius-lg);
+  padding: 28px 30px;
+  color: var(--text-on-ink);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 148px;
+}
+
+.hero-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-on-ink-muted);
+  margin-bottom: 10px;
+}
+
+.hero-figure {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.hero-rule {
+  width: 64px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+  margin-top: 16px;
+}
+
+.stat-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stat-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-1);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-figure {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card.income .stat-figure {
+  color: var(--positive);
+}
+
+.stat-card.expense .stat-figure {
+  color: var(--negative);
+}
+
+.stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.stat-card.income .stat-dot {
+  background: var(--positive);
+}
+
+.stat-card.expense .stat-dot {
+  background: var(--negative);
+}
+
+/* ================= Section headings ================= */
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 12px 2px;
+}
+
+/* ================= Form ================= */
 
 form {
-  background: white;
-  padding: 25px;
-  margin-top: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  margin-bottom: 32px;
 }
 
-form h2 {
-  margin-top: 0;
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  align-items: end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 input,
 select {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  font-size: 15px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  background: var(--surface-alt);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="number"] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 input:focus,
 select:focus {
   border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.15);
 }
 
 button {
   background: var(--primary);
-  color: white;
+  color: #fff;
   border: none;
-  padding: 12px 22px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 16px;
-  transition: background 0.2s, transform 0.2s;
+  font-size: 14px;
+  font-weight: 600;
+  height: 40px;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 button:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
+  background: var(--primary-hover);
 }
 
 button:active {
-  transform: translateY(0);
+  transform: translateY(1px);
 }
 
 button:focus-visible {
-  outline: 2px solid var(--primary-darker);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* ================= Table ================= */
+
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 th {
-  background: var(--primary);
-  color: white;
-  padding: 14px;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th.col-amount {
+  text-align: right;
 }
 
 td {
-  padding: 14px;
-  text-align: center;
-  border-bottom: 1px solid var(--border-light);
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
 }
 
-tr:nth-child(even) {
-  background: var(--bg-alt);
-}
-
-tr:hover {
-  background: var(--bg-hover);
+td.col-amount {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
 tr:last-child td {
   border-bottom: none;
 }
 
-hr {
-  margin: 35px 0;
-  border: none;
-  border-top: 1px solid #ddd;
+tr:hover td {
+  background: var(--surface-alt);
 }
 
-.summary {
-  display: flex;
-  gap: 20px;
-  margin: 30px 0;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
+/* ================= Badges & amounts ================= */
 
-.card {
-  flex: 1;
-  min-width: 200px;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-.card h3 {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.card p {
-  margin-top: 10px;
-  font-size: 26px;
-  font-weight: bold;
-}
-
-.income {
-  border-top: 6px solid var(--success);
-}
-
-.expense {
-  border-top: 6px solid var(--danger);
-}
-
-.balance {
-  border-top: 6px solid var(--primary);
-}
-
-/* Transaction badges & amounts (used in TransactionList) */
 .badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: bold;
-  display: inline-block;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
 }
 
 .badge-income {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--positive-bg);
+  color: var(--positive);
+}
+
+.badge-income::before {
+  background: var(--positive);
 }
 
 .badge-expense {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--negative-bg);
+  color: var(--negative);
+}
+
+.badge-expense::before {
+  background: var(--negative);
 }
 
 .amount-income {
-  color: var(--success);
-  font-weight: 600;
+  color: var(--positive);
 }
 
 .amount-expense {
-  color: var(--danger);
-  font-weight: 600;
+  color: var(--negative);
 }
 
 .empty-state {
   text-align: center;
-  padding: 30px;
-  color: #94a3b8;
-  font-style: italic;
+  padding: 48px 20px;
+  color: var(--text-muted);
 }
 
 .sr-only {
@@ -233,20 +471,38 @@ hr {
   border: 0;
 }
 
-/* Responsive */
+/* ================= Reduced motion ================= */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width: 720px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 600px) {
   .App {
-    margin: 15px auto;
-    padding: 12px;
+    padding: 0 14px 40px;
   }
 
-  h1 {
-    font-size: 1.4rem;
-    padding: 14px;
+  .hero-figure {
+    font-size: 32px;
   }
 
-  .card p {
-    font-size: 22px;
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 
   table {

@@ -6,15 +6,13 @@ interface Props {
 
 function TransactionList({ transactions }: Props) {
   return (
-    <div>
-      <h2>Transactions</h2>
-
+    <div className="table-wrap">
       <table>
         <caption className="sr-only">Transaction history</caption>
         <thead>
           <tr>
             <th>Title</th>
-            <th>Amount</th>
+            <th className="col-amount">Amount</th>
             <th>Category</th>
             <th>Type</th>
           </tr>
@@ -32,11 +30,11 @@ function TransactionList({ transactions }: Props) {
               <tr key={transaction.id}>
                 <td>{transaction.title}</td>
                 <td
-                  className={
+                  className={`col-amount ${
                     transaction.type === "Income"
                       ? "amount-income"
                       : "amount-expense"
-                  }
+                  }`}
                 >
                   {transaction.type === "Income" ? "+" : "-"}৳{" "}
                   {transaction.amount.toLocaleString("en-IN", {
