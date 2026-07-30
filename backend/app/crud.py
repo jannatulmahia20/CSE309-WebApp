@@ -9,7 +9,7 @@ def create_transaction(db: Session, transaction: schemas.TransactionCreate):
     db.refresh(db_transaction)
     return db_transaction
 
-
+ 
 def get_transactions(db: Session):
     return db.query(models.Transaction).all()
 
