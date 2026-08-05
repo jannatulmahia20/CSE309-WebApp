@@ -8,6 +8,7 @@ import { getTransactions } from "./services/api";
 import type { Transaction } from "./types/transaction";
 
 type Theme = "light" | "dark";
+type Notice = { type: "success" | "error"; message: string };
 
 const THEME_KEY = "ledger-theme";
 
@@ -28,10 +29,24 @@ const formatAmount = (n: number) =>
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [editingTransaction, setEditingTransaction] =
+    useState<Transaction | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
+
+  const notify = (type: Notice["type"], message: string) => {
+    setNotice({ type, message });
+  };
 
   const loadTransactions = async () => {
-    const data = await getTransactions();
-    setTransactions(data);
+    try {
+      const data = await getTransactions();
+      setTransactions(data);
+    } catch (err) {
+      notify(
+        "error",
+        err instanceof Error ? err.message : "Failed to load transactions."
+      );
+    }
   };
 
   useEffect(() => {
@@ -42,6 +57,13 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     window.localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  // Auto-dismiss the notice banner after a few seconds.
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
 
   const { totalIncome, totalExpense, balance } = useMemo(() => {
     const totalIncome = transactions
@@ -63,8 +85,8 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="brand">
-        <span className="brand-mark">💰 Expense Tracker</span>
-        <span className="brand-sub">Track your income and expenses</span>
+          <span className="brand-mark">Ledger</span>
+          <span className="brand-sub">Personal finance tracker</span>
         </div>
         <button
           type="button"
@@ -75,6 +97,24 @@ function App() {
           {theme === "light" ? "🌙 Dark" : "☀️ Light"}
         </button>
       </header>
+
+      {notice && (
+        <div
+          className={`banner banner-${notice.type}`}
+          role="status"
+          aria-live="polite"
+        >
+          {notice.message}
+          <button
+            type="button"
+            className="banner-dismiss"
+            aria-label="Dismiss notification"
+            onClick={() => setNotice(null)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <section className="summary" aria-label="Account summary">
         <div className="hero-card">
@@ -102,11 +142,20 @@ function App() {
         </div>
       </section>
 
-      <h2 className="section-title">New Entry</h2>
-      <TransactionForm onTransactionAdded={loadTransactions} />
+      <TransactionForm
+        onTransactionAdded={loadTransactions}
+        editingTransaction={editingTransaction}
+        setEditingTransaction={setEditingTransaction}
+        onNotify={notify}
+      />
 
       <h2 className="section-title">Transaction Ledger</h2>
-      <TransactionList transactions={transactions} />
+      <TransactionList
+        transactions={transactions}
+        onEdit={setEditingTransaction}
+        onRefresh={loadTransactions}
+        onNotify={notify}
+      />
     </div>
   );
 }

@@ -1,18 +1,41 @@
-import { useState } from "react";
-import { createTransaction } from "../services/api";
+import { useEffect, useState } from "react";
+import {
+  createTransaction,
+  updateTransaction,
+} from "../services/api";
 import type { Transaction } from "../types/transaction";
 
 interface Props {
   onTransactionAdded: () => void;
+  editingTransaction: Transaction | null;
+  setEditingTransaction: (transaction: Transaction | null) => void;
+  onNotify: (type: "success" | "error", message: string) => void;
 }
 
-function TransactionForm({ onTransactionAdded }: Props) {
-  const [transaction, setTransaction] = useState<Transaction>({
-    title: "",
-    amount: 0,
-    category: "",
-    type: "Income",
-  });
+const emptyTransaction: Transaction = {
+  title: "",
+  amount: 0,
+  category: "",
+  type: "Income",
+};
+
+function TransactionForm({
+  onTransactionAdded,
+  editingTransaction,
+  setEditingTransaction,
+  onNotify,
+}: Props) {
+  const [transaction, setTransaction] =
+    useState<Transaction>(emptyTransaction);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (editingTransaction) {
+      setTransaction(editingTransaction);
+    } else {
+      setTransaction(emptyTransaction);
+    }
+  }, [editingTransaction]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -26,21 +49,42 @@ function TransactionForm({ onTransactionAdded }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    await createTransaction(transaction);
+    setIsSubmitting(true);
+    try {
+      if (editingTransaction && editingTransaction.id) {
+        await updateTransaction(editingTransaction.id, transaction);
+        onNotify("success", "Transaction updated.");
+      } else {
+        await createTransaction(transaction);
+        onNotify("success", "Transaction added.");
+      }
 
-    setTransaction({
-      title: "",
-      amount: 0,
-      category: "",
-      type: "Income",
-    });
+      setTransaction(emptyTransaction);
+      setEditingTransaction(null);
+      onTransactionAdded();
+    } catch (err) {
+      onNotify(
+        "error",
+        err instanceof Error ? err.message : "Failed to save transaction."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    onTransactionAdded();
+  const handleCancel = () => {
+    setTransaction(emptyTransaction);
+    setEditingTransaction(null);
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2 className="section-title form-title">
+        {editingTransaction ? "Update Transaction" : "Add Transaction"}
+      </h2>
+
       <div className="form-grid">
         <div className="field">
           <label htmlFor="title">Title</label>
@@ -97,12 +141,24 @@ function TransactionForm({ onTransactionAdded }: Props) {
         </div>
 
         <div className="field">
-          <label className="sr-only" htmlFor="submit-transaction">
-            Add transaction
-          </label>
-          <button id="submit-transaction" type="submit">
-            Add Entry
+          <button id="submit-transaction" type="submit" disabled={isSubmitting}>
+            {isSubmitting
+              ? "Saving..."
+              : editingTransaction
+              ? "Update"
+              : "Add Entry"}
           </button>
+
+          {editingTransaction && (
+            <button
+              type="button"
+              className="button-secondary"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+          )}
         </div>
       </div>
     </form>
