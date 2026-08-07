@@ -28,6 +28,7 @@ def update_transaction(db: Session, transaction_id: int, transaction: schemas.Tr
     db_transaction.amount = transaction.amount
     db_transaction.category = transaction.category
     db_transaction.type = transaction.type
+    db_transaction.date = transaction.date
 
     db.commit()
     db.refresh(db_transaction)

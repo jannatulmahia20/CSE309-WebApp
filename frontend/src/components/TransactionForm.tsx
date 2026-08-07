@@ -3,7 +3,7 @@ import {
   createTransaction,
   updateTransaction,
 } from "../services/api";
-import type { Transaction } from "../types/transaction";
+import type { Transaction, TransactionInput } from "../types/transaction";
 
 interface Props {
   onTransactionAdded: () => void;
@@ -12,12 +12,23 @@ interface Props {
   onNotify: (type: "success" | "error", message: string) => void;
 }
 
-const emptyTransaction: Transaction = {
+const todayISO = () => new Date().toISOString().slice(0, 10);
+
+const emptyTransaction = (): TransactionInput => ({
   title: "",
   amount: 0,
   category: "",
   type: "Income",
-};
+  date: todayISO(),
+});
+
+function validate(t: TransactionInput): string | null {
+  if (!t.title.trim()) return "Title is required.";
+  if (!t.category.trim()) return "Category is required.";
+  if (!t.amount || t.amount <= 0) return "Amount must be greater than 0.";
+  if (!t.date) return "Date is required.";
+  return null;
+}
 
 function TransactionForm({
   onTransactionAdded,
@@ -25,16 +36,19 @@ function TransactionForm({
   setEditingTransaction,
   onNotify,
 }: Props) {
-  const [transaction, setTransaction] =
-    useState<Transaction>(emptyTransaction);
+  const [transaction, setTransaction] = useState<TransactionInput>(
+    emptyTransaction()
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingTransaction) {
       setTransaction(editingTransaction);
     } else {
-      setTransaction(emptyTransaction);
+      setTransaction(emptyTransaction());
     }
+    setFormError(null);
   }, [editingTransaction]);
 
   const handleChange = (
@@ -51,9 +65,16 @@ function TransactionForm({
     e.preventDefault();
     if (isSubmitting) return;
 
+    const error = validate(transaction);
+    if (error) {
+      setFormError(error);
+      return;
+    }
+    setFormError(null);
+
     setIsSubmitting(true);
     try {
-      if (editingTransaction && editingTransaction.id) {
+      if (editingTransaction) {
         await updateTransaction(editingTransaction.id, transaction);
         onNotify("success", "Transaction updated.");
       } else {
@@ -61,7 +82,7 @@ function TransactionForm({
         onNotify("success", "Transaction added.");
       }
 
-      setTransaction(emptyTransaction);
+      setTransaction(emptyTransaction());
       setEditingTransaction(null);
       onTransactionAdded();
     } catch (err) {
@@ -75,15 +96,22 @@ function TransactionForm({
   };
 
   const handleCancel = () => {
-    setTransaction(emptyTransaction);
+    setTransaction(emptyTransaction());
     setEditingTransaction(null);
+    setFormError(null);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <h2 className="section-title form-title">
         {editingTransaction ? "Update Transaction" : "Add Transaction"}
       </h2>
+
+      {formError && (
+        <p className="field-error" role="alert">
+          {formError}
+        </p>
+      )}
 
       <div className="form-grid">
         <div className="field">
@@ -95,7 +123,6 @@ function TransactionForm({
             placeholder="e.g. Salary, Groceries"
             value={transaction.title}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -108,7 +135,6 @@ function TransactionForm({
             placeholder="e.g. Food, Rent"
             value={transaction.category}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -119,11 +145,10 @@ function TransactionForm({
             type="number"
             name="amount"
             step="0.01"
-            min="0"
+            min="0.01"
             placeholder="0.00"
-            value={transaction.amount}
+            value={transaction.amount || ""}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -141,6 +166,20 @@ function TransactionForm({
         </div>
 
         <div className="field">
+          <label htmlFor="date">Date</label>
+          <input
+            id="date"
+            type="date"
+            name="date"
+            value={transaction.date}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="field">
+          <label className="sr-only" htmlFor="submit-transaction">
+            Submit
+          </label>
           <button id="submit-transaction" type="submit" disabled={isSubmitting}>
             {isSubmitting
               ? "Saving..."

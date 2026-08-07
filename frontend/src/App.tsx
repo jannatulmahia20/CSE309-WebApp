@@ -3,6 +3,7 @@ import "./App.css";
 
 import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
+import ExpenseChart from "./components/ExpenseChart";
 
 import { getTransactions } from "./services/api";
 import type { Transaction } from "./types/transaction";
@@ -32,12 +33,14 @@ function App() {
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const notify = (type: Notice["type"], message: string) => {
     setNotice({ type, message });
   };
 
   const loadTransactions = async () => {
+    setIsLoading(true);
     try {
       const data = await getTransactions();
       setTransactions(data);
@@ -46,6 +49,8 @@ function App() {
         "error",
         err instanceof Error ? err.message : "Failed to load transactions."
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,19 +89,23 @@ function App() {
   return (
     <div className="App">
       <header className="app-header">
-        <div className="brand">
-          <span className="brand-mark">Ledger</span>
-          <span className="brand-sub">Personal finance tracker</span>
-        </div>
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-          aria-label="Toggle color theme"
-        >
-          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-        </button>
-      </header>
+  <div className="brand">
+    <span className="brand-mark">💰 Smart Personal Finance Tracker</span>
+    <span className="brand-sub">
+      Track your income and expenses effortlessly
+    </span>
+  </div>
+
+  <button
+    type="button"
+    className="theme-toggle"
+    onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+    aria-label="Toggle color theme"
+    aria-pressed={theme === "dark"}
+  >
+    {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+  </button>
+</header>
 
       {notice && (
         <div
@@ -142,6 +151,8 @@ function App() {
         </div>
       </section>
 
+      <ExpenseChart transactions={transactions} />
+
       <TransactionForm
         onTransactionAdded={loadTransactions}
         editingTransaction={editingTransaction}
@@ -152,10 +163,13 @@ function App() {
       <h2 className="section-title">Transaction Ledger</h2>
       <TransactionList
         transactions={transactions}
+        isLoading={isLoading}
         onEdit={setEditingTransaction}
         onRefresh={loadTransactions}
         onNotify={notify}
       />
+      
+     
     </div>
   );
 }

@@ -1,3 +1,4 @@
+from datetime import date as date_type
 from pydantic import BaseModel
 
 
@@ -6,6 +7,7 @@ class TransactionBase(BaseModel):
     amount: float
     category: str
     type: str
+    date: date_type
 
 
 class TransactionCreate(TransactionBase):
