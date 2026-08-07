@@ -1,4 +1,3 @@
-# CSE309 Web App 
 # 💰 Smart Personal Finance Tracker
 
 A full-stack web application built with **React**, **FastAPI**, and **SQLite** for managing personal finances. The application allows users to create, view, update, and delete transactions while providing a real-time summary of income, expenses, and balance through a modern dashboard.
@@ -14,11 +13,15 @@ All project documentation is available in the **`docs/`** folder.
 ## ✨ Features
 
 - ✅ Create, Read, Update, and Delete (CRUD) transactions
+- ✅ Add transaction date
 - ✅ Track income and expenses
-- ✅ Dashboard showing Total Income, Total Expense, and Current Balance
+- ✅ Dashboard with Total Income, Total Expense, and Net Balance
+- ✅ Expense Breakdown by category
+- ✅ Filter transactions by type (Income / Expense)
+- ✅ Edit and Delete transactions
 - ✅ Dark/Light theme support
 - ✅ Responsive and modern user interface
-- ✅ RESTful API integration with FastAPI
+- ✅ RESTful API built with FastAPI
 - ✅ SQLite database using SQLAlchemy ORM
 - ✅ Interactive API documentation using Swagger UI
 
@@ -27,21 +30,25 @@ All project documentation is available in the **`docs/`** folder.
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - React
 - TypeScript
 - Vite
 - CSS
 
 ### Backend
+
 - FastAPI
 - SQLAlchemy
 - Pydantic
 - Uvicorn
 
 ### Database
+
 - SQLite
 
 ### Tools
+
 - Git & GitHub
 - Swagger UI
 
@@ -73,6 +80,7 @@ CSE309 Web App
 │   │   │   ├── react.svg
 │   │   │   └── vite.svg
 │   │   ├── components
+│   │   │   ├── ExpenseChart.tsx
 │   │   │   ├── TransactionForm.tsx
 │   │   │   └── TransactionList.tsx
 │   │   ├── services
@@ -84,16 +92,16 @@ CSE309 Web App
 │   │   ├── index.css
 │   │   └── main.tsx
 │   ├── package.json
+│   ├── package-lock.json
 │   └── vite.config.ts
 │
-└── docs
+├── docs
+└── README.md
 ```
 
 ---
 
-
-
-## Backend Setup
+# 🚀 Backend Setup
 
 Navigate to the backend directory:
 
@@ -127,7 +135,7 @@ Run the FastAPI server:
 python -m uvicorn app.main:app --reload
 ```
 
-The backend will run at:
+Backend runs at:
 
 ```
 http://127.0.0.1:8000
@@ -141,7 +149,7 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Frontend Setup
+# 💻 Frontend Setup
 
 Navigate to the frontend directory:
 
@@ -155,17 +163,25 @@ Install dependencies:
 npm install
 ```
 
-Run the React development server:
+Run the React application:
 
 ```bash
 npm run dev
 ```
 
-Open the URL shown in your terminal (usually):
+Open the URL shown in the terminal (usually):
 
 ```
 http://localhost:3000
 ```
+
+or
+
+```
+http://localhost:5173
+```
+
+depending on your Vite configuration.
 
 ---
 
@@ -184,15 +200,16 @@ http://localhost:3000
 
 The application uses **SQLite** as its database.
 
-Transaction fields include:
+### Transaction Model
 
 | Field | Type |
-|--------|------|
+|-------|------|
 | id | Integer |
 | title | String |
 | amount | Float |
 | category | String |
-| type | Income / Expense |
+| type | String (Income / Expense) |
+| date | Date |
 
 ---
 
@@ -213,16 +230,32 @@ SQLite Database
 
 ---
 
+## 📸 Application Features
 
+- Dashboard displaying:
+  - Net Balance
+  - Total Income
+  - Total Expense
+- Expense Breakdown by category
+- Add Transaction form
+- Transaction history table
+- Edit and Delete transactions
+- Filter by transaction type
+- Dark/Light mode
+- Automatic data refresh after CRUD operations
+- Interactive Swagger API documentation
+
+---
 
 ## 🌱 Future Improvements
 
+- User authentication (Login & Registration)
+- Monthly budget planning
 - Search transactions
 - Filter by category
-- Charts and analytics
-- Monthly reports
-- User authentication
-- Export transaction history
+- Export transaction history (CSV/PDF)
+- PostgreSQL support
+- Cloud deployment (Render + Vercel)
 
 ---
 
