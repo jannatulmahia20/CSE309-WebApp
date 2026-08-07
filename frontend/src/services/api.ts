@@ -1,6 +1,6 @@
 import type { Transaction } from "../types/transaction";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://cse309-webapp.onrender.com";
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   let response: Response;
