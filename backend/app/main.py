@@ -3,17 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import Base, engine
 from . import models
-from .routers import transactions
+from .routers import transactions, auth
 
+
+# Create database tables
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="Smart Personal Finance Tracker API",
     version="1.0.0"
 )
 
+
 app.add_middleware(
-    
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
@@ -23,9 +26,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-
 )
 
+
+# Routers
+app.include_router(auth.router)
 app.include_router(transactions.router)
 
 

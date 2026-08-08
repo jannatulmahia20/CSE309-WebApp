@@ -1,5 +1,5 @@
 from datetime import date as date_type
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class TransactionBase(BaseModel):
@@ -16,6 +16,25 @@ class TransactionCreate(TransactionBase):
 
 class Transaction(TransactionBase):
     id: int
+    user_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+
+    model_config = ConfigDict(from_attributes=True)
