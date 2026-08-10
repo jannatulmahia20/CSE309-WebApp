@@ -31,7 +31,7 @@ function Signup({ onGoToLogin }: Props) {
     setIsLoading(true);
 
     try {
-      const data = await signup(username, email, password);
+      const data = await signup(username.trim(), email.trim(), password);
 
       setSuccess(data.message);
 
@@ -53,75 +53,126 @@ function Signup({ onGoToLogin }: Props) {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <h1>Smart Personal Finance Tracker</h1>
-        <p className="auth-subtitle">Create your account</p>
+      {/* Left side - Branding */}
+      <div className="auth-sidebar">
+        <div className="auth-side-content">
+          <div className="brand-mark">৳</div>
 
-        {error && (
-          <div className="banner banner-error" role="alert">
-            {error}
-          </div>
-        )}
+          <h1 className="auth-brand">
+            Smart Personal
+            <br />
+            Finance Tracker
+          </h1>
 
-        {success && (
-          <div className="banner banner-success" role="status">
-            {success}
-          </div>
-        )}
+          <p className="auth-tagline">Start your ledger today</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label htmlFor="signup-username">Username</label>
-            <input
-              id="signup-username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Choose a username"
-              autoComplete="username"
-            />
-          </div>
+          <ul className="auth-features">
+            <li>
+              <span className="feature-dot" aria-hidden="true" />
+              Track income and expenses in one place
+            </li>
 
-          <div className="field">
-            <label htmlFor="signup-email">Email</label>
-            <input
-              id="signup-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              autoComplete="email"
-            />
-          </div>
+            <li>
+              <span className="feature-dot" aria-hidden="true" />
+              Visual breakdowns by category
+            </li>
 
-          <div className="field">
-            <label htmlFor="signup-password">Password</label>
-            <input
-              id="signup-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Create a password"
-              autoComplete="new-password"
-            />
-          </div>
+            <li>
+              <span className="feature-dot" aria-hidden="true" />
+              Only you can see your data
+            </li>
+          </ul>
 
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="auth-switch">
-          Already have an account?{" "}
-          <button
-            type="button"
-            className="link-button"
-            onClick={onGoToLogin}
-          >
-            Login
-          </button>
-        </p>
+          <span className="auth-side-footnote">
+            A ledger for everyday finances — clear, simple, yours.
+          </span>
+        </div>
       </div>
+
+      {/* Right side - Signup */}
+      <main className="auth-main">
+        <div className="auth-card">
+          <div className="auth-card-header">
+            <span className="mobile-brand-mark">৳</span>
+
+            <h2>Create your account</h2>
+
+            <p className="auth-subtitle">
+              Start tracking your finances today
+            </p>
+          </div>
+
+          {error && (
+            <div className="banner banner-error" role="alert" aria-live="polite">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="banner banner-success" role="status" aria-live="polite">
+              {success}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="field">
+              <label htmlFor="signup-username">Username</label>
+              <input
+                id="signup-username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Choose a username"
+                autoComplete="username"
+                autoFocus
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="signup-email">Email</label>
+              <input
+                id="signup-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="signup-password">Password</label>
+              <input
+                id="signup-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a password"
+                autoComplete="new-password"
+              />
+            </div>
+
+            <button type="submit" className="button-block" disabled={isLoading}>
+              {isLoading ? "Creating account..." : "Sign Up"}
+            </button>
+          </form>
+
+          <div className="auth-divider">
+            <span>or</span>
+          </div>
+
+          <p className="auth-switch">
+            Already have an account?{" "}
+            <button
+              type="button"
+              className="link-button"
+              onClick={onGoToLogin}
+            >
+              Login
+            </button>
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

@@ -105,6 +105,8 @@ body {
   padding: 22px 4px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .brand {
@@ -125,6 +127,22 @@ body {
 .brand-sub {
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-chip {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+
+.header-signout {
+  margin-top: 0;
 }
 
 .theme-toggle {
@@ -428,6 +446,324 @@ button:disabled {
   font-size: 13px;
   font-weight: 500;
   margin: 0 0 14px 0;
+}
+
+.button-block {
+  width: 100%;
+}
+
+/* Standalone theme toggle on the login screen (not inside app-header) */
+.App > .theme-toggle {
+  display: block;
+  margin: 0 0 12px auto;
+}
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 20px;
+}
+
+/* ================= Split-screen auth page ================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  background: var(--bg);
+}
+
+.auth-side,
+.auth-sidebar {
+  flex: 0 0 44%;
+  max-width: 480px;
+  background: var(--ink);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--ledger-rule) 0,
+    var(--ledger-rule) 1px,
+    transparent 1px,
+    transparent 28px
+  );
+  color: var(--text-on-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 48px;
+}
+
+.auth-side-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 340px;
+}
+
+.auth-side .brand-mark,
+.auth-sidebar .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: #7da2f5;
+}
+
+.auth-brand {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-on-ink);
+  margin: 4px 0 0 0;
+}
+
+.auth-tagline {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-on-ink-muted);
+  margin: 0;
+}
+
+.auth-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-on-ink-muted);
+}
+
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7da2f5;
+  flex-shrink: 0;
+}
+
+.auth-side-footnote {
+  font-size: 12px;
+  color: var(--text-on-ink-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 18px;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.auth-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.auth-card-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.mobile-brand-mark {
+  display: none;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+@media (max-width: 900px) {
+  .auth-side,
+  .auth-sidebar {
+    display: none;
+  }
+
+  .mobile-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--ink);
+    color: #7da2f5;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 0;
+  height: auto;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: var(--primary-hover);
+  background: none;
+  transform: none;
+}
+
+.auth-card h1 {
+  margin: 0 0 6px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.auth-subtitle {
+  margin: 0 0 20px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.auth-switch {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.auth-switch .button-secondary {
+  margin-top: 0;
+}
+
+/* Dashboard header (bare h1 + welcome-text, instead of .brand/.brand-mark) */
+.app-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.welcome-text {
+  margin: 0 0 2px 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ================= Auth ================= */
+
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.auth-card .brand-mark {
+  font-size: 15px;
+}
+
+.auth-card .brand-sub {
+  margin-bottom: 20px;
+}
+
+.auth-card form {
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.auth-card .field-error {
+  width: 100%;
+  text-align: left;
+}
+
+.auth-toggle {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.auth-toggle button {
+  flex: 1;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  border: none;
+  border-radius: 0;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auth-toggle button.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.auth-toggle button:hover:not(.active) {
+  background: var(--border);
+  transform: none;
 }
 
 /* ================= Expense chart ================= */
@@ -787,3 +1123,122 @@ tr:hover td {
     width: 100%;
   }
 }
+
+/* =========================
+   Logout Confirmation Modal
+   ========================= */
+
+   .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    padding: 20px;
+  
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+  }
+  
+  .logout-modal {
+    width: min(420px, 100%);
+    padding: 32px;
+  
+    text-align: center;
+  
+    background: var(--card-bg, #ffffff);
+    color: var(--text-color, #222222);
+  
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 18px;
+  
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  
+    animation: logoutModalIn 0.2s ease-out;
+  }
+  
+  .logout-icon {
+    width: 52px;
+    height: 52px;
+  
+    margin: 0 auto 16px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    border-radius: 50%;
+  
+    font-size: 26px;
+  
+    background: var(--surface-color, #f3f4f6);
+  }
+  
+  .logout-modal h2 {
+    margin: 0 0 10px;
+  
+    font-size: 24px;
+  }
+  
+  .logout-modal p {
+    margin: 0 auto 24px;
+  
+    max-width: 320px;
+  
+    line-height: 1.6;
+  
+    opacity: 0.75;
+  }
+  
+  .logout-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  
+  .logout-actions button {
+    min-width: 120px;
+  }
+  
+  .logout-confirm-button {
+    border: none;
+    border-radius: 10px;
+  
+    padding: 11px 20px;
+  
+    font: inherit;
+    font-weight: 600;
+  
+    cursor: pointer;
+  
+    background: #b42318;
+    color: white;
+  
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease;
+  }
+  
+  .logout-confirm-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  .logout-button {
+    font-weight: 600;
+  }
+  
+  @keyframes logoutModalIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.98);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }

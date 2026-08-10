@@ -11,6 +11,7 @@ import { getTransactions } from "./services/api";
 import type { Transaction } from "./types/transaction";
 
 type Theme = "light" | "dark";
+
 type Notice = {
   type: "success" | "error";
   message: string;
@@ -51,17 +52,21 @@ function App() {
 
   const [showSignup, setShowSignup] = useState(false);
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   // =========================
   // Dashboard
   // =========================
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+  const [theme, setTheme] = useState(getInitialTheme);
 
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
 
   const [notice, setNotice] = useState<Notice | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
 
   // =========================
@@ -98,7 +103,6 @@ function App() {
 
       notify("error", message);
 
-      // If token/session expired, log the user out.
       if (message.includes("session has expired")) {
         handleLogout();
       }
@@ -153,8 +157,9 @@ function App() {
     setTransactions([]);
     setEditingTransaction(null);
     setShowSignup(false);
+    setShowLogoutConfirm(false);
 
-    notify("success", "You have been logged out.");
+    notify("success", "You have been logged out successfully.");
   }
 
   // =========================
@@ -210,11 +215,15 @@ function App() {
   // =========================
 
   return (
-    <div className="app">
+    <div className="app-shell">
+      {/* =========================
+          Header
+          ========================= */}
+
       <header className="app-header">
         <div>
           <p className="welcome-text">
-            Welcome, {username} 👋
+            Welcome back, {username} 👋
           </p>
 
           <h1>Personal Finance Tracker</h1>
@@ -225,9 +234,7 @@ function App() {
             type="button"
             className="theme-toggle"
             onClick={() =>
-              setTheme((t) =>
-                t === "light" ? "dark" : "light"
-              )
+              setTheme((t) => (t === "light" ? "dark" : "light"))
             }
             aria-label="Toggle color theme"
             aria-pressed={theme === "dark"}
@@ -237,13 +244,17 @@ function App() {
 
           <button
             type="button"
-            className="button-secondary"
-            onClick={handleLogout}
+            className="button-secondary logout-button"
+            onClick={() => setShowLogoutConfirm(true)}
           >
             Logout
           </button>
         </div>
       </header>
+
+      {/* =========================
+          Notification
+          ========================= */}
 
       {notice && (
         <div
@@ -265,6 +276,54 @@ function App() {
       )}
 
       {/* =========================
+          Logout Confirmation
+          ========================= */}
+
+      {showLogoutConfirm && (
+        <div
+          className="modal-overlay"
+          role="presentation"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          <div
+            className="logout-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="logout-icon" aria-hidden="true">
+              ↪
+            </div>
+
+            <h2 id="logout-title">Log out?</h2>
+
+            <p>
+              Are you sure you want to log out of your account?
+            </p>
+
+            <div className="logout-actions">
+              <button
+                type="button"
+                className="button-secondary"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="logout-confirm-button"
+                onClick={handleLogout}
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================
           Account Summary
           ========================= */}
 
@@ -273,9 +332,7 @@ function App() {
         aria-label="Account summary"
       >
         <div className="hero-card">
-          <span className="hero-label">
-            Net Balance
-          </span>
+          <span className="hero-label">Net Balance</span>
 
           <span className="hero-figure">
             {formatAmount(balance)}
