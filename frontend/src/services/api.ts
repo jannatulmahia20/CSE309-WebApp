@@ -1,6 +1,10 @@
-import type { Transaction } from "../types/transaction";
+import type {
+  Transaction,
+  TransactionInput,
+} from "../types/transaction";
 
-const API_URL = "http://127.0.0.1:8000";
+// Production backend
+const API_URL = "https://cse309-webapp.onrender.com";
 
 async function request<T>(
   url: string,
@@ -31,7 +35,9 @@ async function request<T>(
     localStorage.removeItem("access_token");
     localStorage.removeItem("username");
 
-    throw new Error("Your session has expired. Please log in again.");
+    throw new Error(
+      "Your session has expired. Please log in again."
+    );
   }
 
   if (!response.ok) {
@@ -63,49 +69,56 @@ async function request<T>(
   }
 }
 
-
 // =========================
 // Transactions
 // =========================
 
 export async function getTransactions(): Promise<Transaction[]> {
-  return request<Transaction[]>(`${API_URL}/transactions/`);
+  return request<Transaction[]>(
+    `${API_URL}/transactions/`
+  );
 }
-
 
 export async function createTransaction(
-  transaction: Transaction
+  transaction: TransactionInput
 ): Promise<Transaction> {
-  return request<Transaction>(`${API_URL}/transactions/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(transaction),
-  });
+  return request<Transaction>(
+    `${API_URL}/transactions/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    }
+  );
 }
-
 
 export async function updateTransaction(
   id: number,
-  transaction: Transaction
+  transaction: TransactionInput
 ): Promise<Transaction> {
-  return request<Transaction>(`${API_URL}/transactions/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(transaction),
-  });
+  return request<Transaction>(
+    `${API_URL}/transactions/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    }
+  );
 }
-
 
 export async function deleteTransaction(
   id: number
 ): Promise<void> {
-  await request<void>(`${API_URL}/transactions/${id}`, {
-    method: "DELETE",
-  });
+  await request<null>(
+    `${API_URL}/transactions/${id}`,
+    {
+      method: "DELETE",
+    }
+  );
 }
 
 // =========================
