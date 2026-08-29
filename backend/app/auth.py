@@ -1,5 +1,7 @@
+import os
 from datetime import datetime, timedelta, timezone
 
+from dotenv import load_dotenv
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
@@ -11,17 +13,27 @@ from .database import get_db
 from .models import User
 
 
+# Load environment variables from .env
+load_dotenv()
+
+
 # Secret key used to sign JWT tokens.
-# For deployment, move this to an environment variable.
-SECRET_KEY = "your-super-secret-key-change-this"
+# The secret is stored in the .env file instead of source code.
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")
+
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
 
 pwd_context = CryptContext(
     schemes=["bcrypt"],
     deprecated="auto"
 )
+
 
 security = HTTPBearer()
 
